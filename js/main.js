@@ -106,7 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   } else if (userWidth > 991) {
 
-    //подключение к базе данныx 
     const getData = () => {
       return fetch('./db/descktop.json')
         .then((response) => {
@@ -118,9 +117,8 @@ document.addEventListener("DOMContentLoaded", () => {
         })
 
         .then((data) => {
-          // console.log(data);
           render(data);
-
+          changeTime(data);
 
         })
 
@@ -128,19 +126,24 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error(error.message);
         })
     }
-    //
 
     getData()
 
-    //отображение товара на странице
-    const render = (data) => {
-      const cardContainer = document.querySelector('.excursions__cards');
+  }
 
-      cardContainer.innerHTML = '';
+  //////////////////////////////////////////////////////
 
-      data.forEach(card => {
 
-        cardContainer.insertAdjacentHTML('beforeend', `
+
+  ////////////////////////////////////////////////
+  const render = (data) => {
+    const cardContainer = document.querySelector('.excursions__cards');
+
+    cardContainer.innerHTML = '';
+
+    data.forEach(card => {
+
+      cardContainer.insertAdjacentHTML('beforeend', `
       <div class="excursions__card card">
             <div class="card__img">
               <img
@@ -177,6 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   <span class="list__time-data time-data">   
                     
                   </span>
+                 
 
         </li >
               </ul >
@@ -196,32 +200,25 @@ document.addEventListener("DOMContentLoaded", () => {
             <!-- /.card__info -->
           </div >
           <!-- /.excursions__card card -->`)
-      })
-
-      getTimeElems(data);
-
-    }
-    ///render
+    })
 
   }
-  //if
 
-  const getTimeElems = (data) => {
+
+  let stack = 4;
+  let count = 1;
+  const newStack = stack * count;
+
+
+  const renderTimeElems = (data) => {
 
     let timeContainers = document.querySelectorAll('.list__time-data');
-    let stack = 4;
-    let count = 1;
-    const newStack = stack * count
-
-    console.log(count);
 
     for (let d = 0; d < data.length; d++) {
-      let timeElems = data[d].times
-
-      let arrTimeElems = timeElems.slice(0, newStack - 1)
-
+      let timeElems = data[d].times; // ArrTime *3  
 
       if (timeElems.length <= newStack) {
+        timeContainers[d].innerHTML = '';
 
         timeElems.forEach(timesElem => {
           timeContainers[d].insertAdjacentHTML('beforeend', `
@@ -230,45 +227,71 @@ document.addEventListener("DOMContentLoaded", () => {
 
       } else {
 
-
-        arrTimeElems.forEach(timesElem => {
+        sliseArr(timeElems).forEach(timesElem => {
           timeContainers[d].insertAdjacentHTML('beforeend', `
                   <span class="time-data__time">`+ timesElem + `</span>`)
         })
 
         timeContainers[d].insertAdjacentHTML('beforeend', `
-                  <span class="time-data__btn"> еще...</span>`)
+                  <span class="time-data__btn"> еще...</span>`);
 
-
-        let btnMore = document.querySelector('.time-data__btn')
-
-        btnMore.addEventListener('click', () => {
-
-          if (timeElems.length > newStack) {
-
-            ++count ///?????
-
-            arrTimeElems.forEach(timesElem => {
-              timeContainers[d].insertAdjacentHTML('beforeend', `
-                  <span class="time-data__time">`+ timesElem + `</span>`)
-            })
-
-
-          } else {
-            btn.style.display = 'none'
-          }
-
-
-        })
-
+        let b = document.querySelector('.time-data__btn')
+        b.addEventListener('click', getTime)
 
       }
+
+
       ///////////////////////////
 
     }
 
+
   }
-  // getTimeElems
+
+  const sliseArr = (timeN) => {
+    return timeN.slice(0, newStack - 1)
+
+  }
+
+  const changeTime = (timeN) => {
+
+    renderTimeElems(sliseArr(timeN, newStack));
+
+    if (timeElems.length > newStack) {
+
+      count++
+    } else {
+
+      btn.style.display = 'none'
+    }
+
+    // }
+
+  }
+
+  const getTime = () => {
+    return fetch('./db/descktop.json')
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          throw new Error('Данные получены с ошибкой')
+        }
+      })
+
+      .then((data) => {
+        changeTime(data);
+
+      })
+
+      .catch((error) => {
+        console.error(error.message);
+      })
+
+  }
+
+
+
 
 
 })
