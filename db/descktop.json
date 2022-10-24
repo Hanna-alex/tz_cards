@@ -1,0 +1,29 @@
+[
+    {
+      "id": 0,
+      "img": "d01.jpg",
+      "title": "Обзорная экскурсия по&nbsp;рекам и&nbsp;каналам с&nbsp;остановками Hop on&nbsp;Hop Off 2019",
+      "labelText": "Новинка",
+      "labelClass": "card__label--new",
+      "times": ["12:00", "12:30", "13:00"]
+      
+    },
+    {
+      "id": 1,
+      "img": "d02.jpg",
+      "title": "Обзорная экскурсия по&nbsp;рекам и&nbsp;каналам с&nbsp;остановками Hop on&nbsp;Hop Off 2019",
+      "labelText": "Круглый год",
+      "labelClass": "card__label--year",
+      "times": ["12:00", "12:30", "13:30", "14:00"]
+    },
+    {
+      "id": 2,
+      "img": "d03.jpg",
+      "title": "Обзорная экскурсия по&nbsp;рекам и&nbsp;каналам с&nbsp;остановками Hop on&nbsp;Hop Off 2019",
+      "labelText": "",
+      "labelClass": "",
+      "times": ["12:00", "12:30", "13:00", "13:30", "14:00"]
+    }
+
+]
+
