@@ -208,21 +208,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let stack = 4;
   let count = 1;
-  const newStack = stack * count;
   let btn
 
 
-  const renderTimeElems = (n, timeN, indexE) => {
+  const renderTimeElems = (n, timeN, newStack, indexE) => {
     let timeContainers = document.querySelectorAll('.list__time-data');
-
 
     for (let d = 0; d < timeContainers.length; d++) {
 
-
       if (indexE === d) {
+
         if (timeN.length <= newStack) {
 
-          timeContainers.innerHTML = '';
+          timeContainers[d].innerHTML = ' ';
 
           n.forEach(timesElem => {
             timeContainers[d].insertAdjacentHTML('beforeend', `
@@ -230,19 +228,27 @@ document.addEventListener("DOMContentLoaded", () => {
           })
 
         } else {
-          timeContainers.innerHTML = '';
+          timeContainers[d].innerHTML = ' ';
 
           n.forEach(timesElem => {
             timeContainers[d].insertAdjacentHTML('beforeend', `
                   <span class="time-data__time">`+ timesElem + `</span>`)
           })
 
-          timeContainers[d].insertAdjacentHTML('beforeend', `
+          timeContainers[d].insertAdjacentHTML('afterend', `
                   <span class="time-data__btn"> еще...</span>`);
 
-
           btn = document.querySelector('.time-data__btn');
-          btn.addEventListener('click', getTime);
+          btn.addEventListener('click', () => {
+
+            ++count;
+            console.log(newStack);
+            getTime()
+            if (timeN.length > newStack) {
+              btn.style.display = "none"
+            }
+
+          });
 
         }
       }
@@ -253,38 +259,33 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const sliseArr = (arr, index) => {
-    if (arr.length > 4) {
-      return arr.slice(0, index - 1)
-    } else {
-      return arr.slice(0, index)
-    }
+    return arr.slice(0, index - 1)
 
+  }
+
+  const sliseArrN = (arr, index) => {
+
+    return arr.slice(0, index)
 
   }
 
   const changeTime = (data) => {
 
     const newStack = stack * count;
-
     for (let d = 0; d < data.length; d++) {
       let timeN = data[d].times; // ArrTime *3   
       let indexE = d;
 
-      renderTimeElems(sliseArr(timeN, newStack), timeN, indexE);
+      if (timeN.length > newStack) {
+        renderTimeElems(sliseArr(timeN, newStack), timeN, newStack, indexE);
+        console.log(newStack);
+      } else {
+        renderTimeElems(sliseArrN(timeN, newStack), timeN, newStack, indexE);
+
+      }
     }
 
-    if (timeN.length > newStack) {
-      count++
-    } else {
-
-      btn.style.display = 'none'
-    }
   }
-
-
-
-
-
 
   const getTime = () => {
     return fetch('./db/descktop.json')
@@ -297,7 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
 
       .then((data) => {
-        // changeTime(data);
+        changeTime(data);
 
       })
 
