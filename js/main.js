@@ -129,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     getData()
 
+
   }
 
   //////////////////////////////////////////////////////
@@ -208,66 +209,82 @@ document.addEventListener("DOMContentLoaded", () => {
   let stack = 4;
   let count = 1;
   const newStack = stack * count;
+  let btn
 
 
-  const renderTimeElems = (data) => {
-
+  const renderTimeElems = (n, timeN, indexE) => {
     let timeContainers = document.querySelectorAll('.list__time-data');
 
-    for (let d = 0; d < data.length; d++) {
-      let timeElems = data[d].times; // ArrTime *3  
 
-      if (timeElems.length <= newStack) {
-        timeContainers[d].innerHTML = '';
+    for (let d = 0; d < timeContainers.length; d++) {
 
-        timeElems.forEach(timesElem => {
-          timeContainers[d].insertAdjacentHTML('beforeend', `
+
+      if (indexE === d) {
+        if (timeN.length <= newStack) {
+
+          timeContainers.innerHTML = '';
+
+          n.forEach(timesElem => {
+            timeContainers[d].insertAdjacentHTML('beforeend', `
                   <span class="time-data__time">`+ timesElem + `</span>`)
-        })
+          })
 
-      } else {
+        } else {
+          timeContainers.innerHTML = '';
 
-        sliseArr(timeElems).forEach(timesElem => {
-          timeContainers[d].insertAdjacentHTML('beforeend', `
+          n.forEach(timesElem => {
+            timeContainers[d].insertAdjacentHTML('beforeend', `
                   <span class="time-data__time">`+ timesElem + `</span>`)
-        })
+          })
 
-        timeContainers[d].insertAdjacentHTML('beforeend', `
+          timeContainers[d].insertAdjacentHTML('beforeend', `
                   <span class="time-data__btn"> еще...</span>`);
 
-        let b = document.querySelector('.time-data__btn')
-        b.addEventListener('click', getTime)
 
+          btn = document.querySelector('.time-data__btn');
+          btn.addEventListener('click', getTime);
+
+        }
       }
+    }
+    //////////////////////////
 
 
-      ///////////////////////////
+  }
 
+  const sliseArr = (arr, index) => {
+    if (arr.length > 4) {
+      return arr.slice(0, index - 1)
+    } else {
+      return arr.slice(0, index)
     }
 
 
   }
 
-  const sliseArr = (timeN) => {
-    return timeN.slice(0, newStack - 1)
+  const changeTime = (data) => {
 
-  }
+    const newStack = stack * count;
 
-  const changeTime = (timeN) => {
+    for (let d = 0; d < data.length; d++) {
+      let timeN = data[d].times; // ArrTime *3   
+      let indexE = d;
 
-    renderTimeElems(sliseArr(timeN, newStack));
+      renderTimeElems(sliseArr(timeN, newStack), timeN, indexE);
+    }
 
-    if (timeElems.length > newStack) {
-
+    if (timeN.length > newStack) {
       count++
     } else {
 
       btn.style.display = 'none'
     }
-
-    // }
-
   }
+
+
+
+
+
 
   const getTime = () => {
     return fetch('./db/descktop.json')
@@ -280,7 +297,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
 
       .then((data) => {
-        changeTime(data);
+        // changeTime(data);
 
       })
 
