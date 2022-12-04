@@ -1,1 +1,4 @@
-# tz_nt22.10
+# Cards (ТЗ)
+- HTML
+- CSS
+-JS
