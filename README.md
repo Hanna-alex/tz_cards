@@ -1,4 +1,4 @@
 # Cards (ТЗ)
 - HTML
 - CSS
--JS
+- JS
