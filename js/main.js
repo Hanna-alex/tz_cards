@@ -128,66 +128,102 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //////////////////////////////////////////////////////////////////////////
   let stack = 4;
-  let count = 1;
+  let startCount = 1
+  let count = [4, 4, 4];
 
-  const renderTime = (data) => {
-    const cards = document.querySelectorAll('.time-data')
-    const newStack = stack * count
+  const renderTime = (data, index) => {
 
-    for (let i = 0; i < data.length; i++) {
+    const container = document.querySelectorAll('.time-data')
+    let newStack = index != null ? stack * count[index] : startCount * stack
 
-      cards[i].innerHTML = ' '
-
-
-
-      if (data[i].times.length < 5) {
-
-        data[i].times.forEach(elem => {
+    let cards = document.querySelectorAll('.excursions__card ')
 
 
-          cards[i].insertAdjacentHTML('beforeend', `
+    if (index != null) {
+      container[index].innerHTML = ' '
+
+      sliceArray(data[index].times, newStack).forEach(elem => {
+
+        container[index].insertAdjacentHTML('beforeend', `
                   <span class="time-data__time">`+ elem + `</span>`)
 
-        })
+      })
 
-      } else {
+    } else {
+      for (let i = 0; i < data.length; i++) {
 
-        sliceArray(data[i].times, newStack).forEach(elem => {
+        container[i].innerHTML = ' '
 
+        const itemTime = container[i].querySelectorAll('.time-data__time')
 
-          cards[i].insertAdjacentHTML('beforeend', `
+        if (data[i].times.length > 4 && data[i].times.length != itemTime.length) {
+
+          sliceArray(data[i].times, newStack).forEach(elem => {
+
+            container[i].insertAdjacentHTML('beforeend', `
                   <span class="time-data__time">`+ elem + `</span>`)
 
-        })
-        cards[i].insertAdjacentHTML('afterend', `
+          })
+
+          container[i].insertAdjacentHTML('afterend', `
                   <span class="time-data__btn"> еще...</span>`);
 
+
+        } else {
+
+          data[i].times.forEach(elem => {
+
+            container[i].insertAdjacentHTML('beforeend', `
+                  <span class="time-data__time">`+ elem + `</span>`)
+          })
+        }
+
       }
-
-      let btns = document.querySelectorAll('.time-data__btn')
-
-      console.log(btns);
-
     }
 
+    for (let i = 0; i < cards.length; i++) {
+
+      const btns = cards[i].querySelectorAll('.time-data__btn')
+
+
+
+      btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+
+          let index = i
+
+          newStack = index != null ? stack * count[index] : startCount * stack
+
+          if (data[index].times.length > newStack) {
+
+            console.log('start ' + newStack);
+
+            count[index]++
+            renderTime(data, index)
+            console.log(count);
+
+          } else {
+            renderTime(data, index)
+            btn.style.display = 'none'
+          }
+
+
+        })
+      })
+    }
 
   }
 
 
+
   function sliceArray(arr, index) {
-    console.log(arr);
+
     return arr.slice(0, (index - 1))
 
   }
 
-  let btns = document.querySelectorAll('.time-data__btn')
-
-  console.log(btns);
 
 
-
-
-  ////// 
 })
 //end
 
